@@ -41,7 +41,7 @@
  // Feature definitions and associated constants (feature params, et cetera)
 --- a/third_party/blink/public/common/features.h
 +++ b/third_party/blink/public/common/features.h
-@@ -24,6 +24,7 @@ namespace features {
+@@ -22,6 +22,7 @@ namespace features {
  
  BLINK_COMMON_EXPORT BASE_DECLARE_FEATURE(kDisableLinkDrag);
  BLINK_COMMON_EXPORT BASE_DECLARE_FEATURE(kReducedSystemInfo);
@@ -75,10 +75,10 @@
  #include "third_party/blink/public/common/client_hints/client_hints.h"
  #include "third_party/blink/public/common/device_memory/approximated_device_memory.h"
 +#include "third_party/blink/public/common/features.h"
+ #include "third_party/blink/public/common/permissions_policy/document_policy_features.h"
  #include "third_party/blink/public/common/switches.h"
  #include "third_party/blink/public/mojom/fetch/fetch_api_request.mojom-blink.h"
- #include "third_party/blink/public/mojom/loader/request_context_frame_type.mojom-blink.h"
-@@ -528,6 +529,8 @@ void FrameFetchContext::ModifyRequestFor
+@@ -624,6 +625,8 @@ void FrameFetchContext::ModifyRequestFor
  void FrameFetchContext::AddClientHintsIfNecessary(
      const std::optional<float> resource_width,
      ResourceRequest& request) {

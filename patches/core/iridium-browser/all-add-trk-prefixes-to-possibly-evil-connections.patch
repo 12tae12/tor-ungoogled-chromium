@@ -68,7 +68,7 @@ by default.
 
 --- a/build/apple/tweak_info_plist.py
 +++ b/build/apple/tweak_info_plist.py
-@@ -212,7 +212,7 @@ def _AddKeystoneKeys(plist, bundle_ident
+@@ -218,7 +218,7 @@ def _AddKeystoneKeys(plist, bundle_ident
    also requires the |bundle_identifier| argument (com.example.product)."""
    plist['KSVersion'] = plist['CFBundleShortVersionString']
    plist['KSProductID'] = bundle_identifier
@@ -88,20 +88,9 @@ by default.
  
    // Return true if the customization was applied. Customization is applied only
    // once per machine.
---- a/chrome/browser/extensions/install_signer.cc
-+++ b/chrome/browser/extensions/install_signer.cc
-@@ -63,7 +63,7 @@ const int kSignatureFormatVersion = 2;
- const size_t kSaltBytes = 32;
- 
- const char kBackendUrl[] =
--    "https://www.googleapis.com/chromewebstore/v1.1/items/verify";
-+    "trk:222:https://www.googleapis.com/chromewebstore/v1.1/items/verify";
- 
- const char kPublicKeyPEM[] =
-     "-----BEGIN PUBLIC KEY-----"
 --- a/chrome/browser/media/webrtc/webrtc_event_log_uploader.cc
 +++ b/chrome/browser/media/webrtc/webrtc_event_log_uploader.cc
-@@ -111,7 +111,7 @@ void OnURLLoadUploadProgress(uint64_t cu
+@@ -110,7 +110,7 @@ void OnURLLoadUploadProgress(uint64_t cu
  }  // namespace
  
  const char WebRtcEventLogUploaderImpl::kUploadURL[] =
@@ -112,7 +101,7 @@ by default.
      scoped_refptr<base::SequencedTaskRunner> task_runner)
 --- a/chrome/browser/media/webrtc/webrtc_log_uploader.cc
 +++ b/chrome/browser/media/webrtc/webrtc_log_uploader.cc
-@@ -531,7 +531,7 @@ void WebRtcLogUploader::UploadCompressed
+@@ -529,7 +529,7 @@ void WebRtcLogUploader::UploadCompressed
            }
          })");
  
@@ -156,7 +145,7 @@ by default.
  DownloadFeedbackFactory* DownloadFeedback::factory_ = nullptr;
 --- a/chrome/browser/spellchecker/spellcheck_hunspell_dictionary.cc
 +++ b/chrome/browser/spellchecker/spellcheck_hunspell_dictionary.cc
-@@ -277,7 +277,7 @@ GURL SpellcheckHunspellDictionary::GetDi
+@@ -278,7 +278,7 @@ GURL SpellcheckHunspellDictionary::GetDi
    DCHECK(!bdict_file.empty());
  
    static const char kDownloadServerUrl[] =
@@ -178,7 +167,7 @@ by default.
  
 --- a/chrome/browser/ui/webui/ntp/ntp_resource_cache.cc
 +++ b/chrome/browser/ui/webui/ntp/ntp_resource_cache.cc
-@@ -66,17 +66,17 @@ namespace {
+@@ -65,17 +65,17 @@ namespace {
  // The URL for the the Learn More page shown on incognito new tab.
  const char kLearnMoreIncognitoUrl[] =
  #if BUILDFLAG(IS_CHROMEOS)
@@ -216,7 +205,7 @@ by default.
  
 --- a/chrome/installer/setup/google_chrome_behaviors.cc
 +++ b/chrome/installer/setup/google_chrome_behaviors.cc
-@@ -37,7 +37,7 @@ namespace installer {
+@@ -38,7 +38,7 @@ namespace installer {
  namespace {
  
  constexpr std::wstring_view kUninstallSurveyUrl(
@@ -225,34 +214,20 @@ by default.
  
  // Launches the url directly with the user's default handler for |url|.
  bool NavigateToUrlWithHttps(const std::wstring& url) {
---- a/chromeos/ash/components/geolocation/simple_geolocation_provider.h
-+++ b/chromeos/ash/components/geolocation/simple_geolocation_provider.h
-@@ -101,7 +101,7 @@ class COMPONENT_EXPORT(CHROMEOS_ASH_COMP
- 
-  private:
-   static constexpr char kGeolocationProviderUrl[] =
+--- a/chromeos/ash/components/geolocation/location_fetcher.h
++++ b/chromeos/ash/components/geolocation/location_fetcher.h
+@@ -36,7 +36,7 @@ class GeolocationHandler;
+ class COMPONENT_EXPORT(CHROMEOS_ASH_COMPONENTS_GEOLOCATION) LocationFetcher {
+  public:
+   static constexpr char kDefaultGeolocationProviderUrl[] =
 -      "https://www.googleapis.com/geolocation/v1/geolocate?";
 +      "trk:215:https://www.googleapis.com/geolocation/v1/geolocate?";
  
-   // This class is a singleton.
-   explicit SimpleGeolocationProvider(
---- a/components/drive/service/drive_api_service.cc
-+++ b/components/drive/service/drive_api_service.cc
-@@ -79,9 +79,9 @@ namespace drive {
- namespace {
- 
- // OAuth2 scopes for Drive API.
--const char kDriveScope[] = "https://www.googleapis.com/auth/drive";
-+const char kDriveScope[] = "trk:217:https://www.googleapis.com/auth/drive";
- const char kDriveAppsReadonlyScope[] =
--    "https://www.googleapis.com/auth/drive.apps.readonly";
-+    "trk:218:https://www.googleapis.com/auth/drive.apps.readonly";
- const char kDriveAppsScope[] = "https://www.googleapis.com/auth/drive.apps";
- 
- // Mime type to create a directory.
+   explicit LocationFetcher(
+       scoped_refptr<network::SharedURLLoaderFactory> url_loader_factory);
 --- a/components/feedback/feedback_uploader.cc
 +++ b/components/feedback/feedback_uploader.cc
-@@ -39,7 +39,7 @@ constexpr base::FilePath::CharType kFeed
+@@ -43,7 +43,7 @@ constexpr base::FilePath::CharType kFeed
      FILE_PATH_LITERAL("Feedback Reports");
  
  constexpr char kFeedbackPostUrl[] =
@@ -263,7 +238,7 @@ by default.
  
 --- a/components/google/core/common/google_util.cc
 +++ b/components/google/core/common/google_util.cc
-@@ -152,7 +152,7 @@ BASE_FEATURE(kIsViewerGoogleSearchUrl,
+@@ -150,7 +150,7 @@ BASE_FEATURE(kIsViewerGoogleSearchUrl, b
  
  // Global functions -----------------------------------------------------------
  
@@ -274,7 +249,7 @@ by default.
    url::Component query(0, static_cast<int>(str.length())), key, value;
 --- a/components/history/core/browser/web_history_service.cc
 +++ b/components/history/core/browser/web_history_service.cc
-@@ -43,13 +43,13 @@ namespace history {
+@@ -44,13 +44,13 @@ namespace history {
  namespace {
  
  const char kHistoryQueryHistoryUrl[] =
@@ -293,7 +268,7 @@ by default.
  
 --- a/components/safe_browsing/content/browser/client_side_detection_service.cc
 +++ b/components/safe_browsing/content/browser/client_side_detection_service.cc
-@@ -68,7 +68,7 @@ const int ClientSideDetectionService::kN
+@@ -72,7 +72,7 @@ const int ClientSideDetectionService::kN
  const int ClientSideDetectionService::kPositiveCacheIntervalMinutes = 30;
  
  const char ClientSideDetectionService::kClientReportPhishingUrl[] =
@@ -304,7 +279,7 @@ by default.
    std::unique_ptr<network::SimpleURLLoader> loader;
 --- a/components/safe_search_api/safe_search/safe_search_url_checker_client.cc
 +++ b/components/safe_search_api/safe_search/safe_search_url_checker_client.cc
-@@ -27,7 +27,7 @@ namespace safe_search_api {
+@@ -28,7 +28,7 @@ namespace safe_search_api {
  namespace {
  
  const char kSafeSearchApiUrl[] =
@@ -326,7 +301,7 @@ by default.
    base::Value::Dict dict;
 --- a/components/translate/core/browser/translate_url_fetcher.cc
 +++ b/components/translate/core/browser/translate_url_fetcher.cc
-@@ -97,6 +97,7 @@ bool TranslateURLFetcher::Request(const
+@@ -101,6 +101,7 @@ bool TranslateURLFetcher::Request(const
    resource_request->credentials_mode = network::mojom::CredentialsMode::kOmit;
    resource_request->headers.MergeFrom(extra_request_header_);
  
@@ -343,8 +318,8 @@ by default.
 -const char kSecurityOrigin[] = "https://translate.googleapis.com/";
 +const char kSecurityOrigin[] = "trk:220:https://translate.googleapis.com/";
  
- // The feature is explicitly disabled on WebView.
- // TODO(crbug.com/40819484): Enable the feature on WebView.
+ GURL GetTranslateSecurityOrigin() {
+   std::string security_origin(kSecurityOrigin);
 --- a/components/variations/variations_url_constants.cc
 +++ b/components/variations/variations_url_constants.cc
 @@ -8,7 +8,7 @@ namespace variations {
@@ -369,7 +344,7 @@ by default.
  
 --- a/content/browser/webauth/webauth_request_security_checker.h
 +++ b/content/browser/webauth/webauth_request_security_checker.h
-@@ -90,9 +90,9 @@ class CONTENT_EXPORT WebAuthRequestSecur
+@@ -44,9 +44,9 @@ class CONTENT_EXPORT WebAuthRequestSecur
    // Legacy App IDs, which google.com origins are allowed to assert for
    // compatibility reasons.
    static constexpr char kGstaticAppId[] =
@@ -392,6 +367,17 @@ by default.
  
  #if BUILDFLAG(IS_WIN)
    GURL url(base::WideToUTF16(args[0]));
+--- a/extensions/browser/install_signer.cc
++++ b/extensions/browser/install_signer.cc
+@@ -68,7 +68,7 @@ const int kSignatureFormatVersion = 2;
+ const size_t kSaltBytes = 32;
+ 
+ const char kBackendUrl[] =
+-    "https://www.googleapis.com/chromewebstore/v1.1/items/verify";
++    "trk:222:https://www.googleapis.com/chromewebstore/v1.1/items/verify";
+ 
+ const char kPublicKeyPEM[] =
+     "-----BEGIN PUBLIC KEY-----"
 --- a/extensions/common/extension_urls.cc
 +++ b/extensions/common/extension_urls.cc
 @@ -38,13 +38,13 @@ const GURL* g_item_snippet_url_for_test_
@@ -415,7 +401,7 @@ by default.
  const char kExtensionsMenuUtmSource[] = "ext_extensions_menu";
 --- a/google_apis/gaia/gaia_constants.cc
 +++ b/google_apis/gaia/gaia_constants.cc
-@@ -14,173 +14,173 @@ const char kChromeSource[] = "ChromiumBr
+@@ -14,189 +14,189 @@ const char kChromeSource[] = "ChromiumBr
  const char kUnexpectedServiceResponse[] = "UnexpectedServiceResponse";
  
  // OAuth scopes.
@@ -521,6 +507,11 @@ by default.
 -const char kTachyonOAuthScope[] = "https://www.googleapis.com/auth/tachyon";
 +const char kTachyonOAuthScope[] = "trk:087:https://www.googleapis.com/auth/tachyon";
  
+ // OAuth2 scope for School Tools API.
+ const char kSchoolToolsAuthScope[] =
+-    "https://www.googleapis.com/auth/chromeosschooltools";
++    "trk:068:https://www.googleapis.com/auth/chromeosschooltools";
+ 
  // OAuth2 scope for access to the Photos API.
 -const char kPhotosOAuth2Scope[] = "https://www.googleapis.com/auth/photos";
 +const char kPhotosOAuth2Scope[] = "trk:088:https://www.googleapis.com/auth/photos";
@@ -529,6 +520,11 @@ by default.
  extern const char kSecureConnectOAuth2Scope[] =
 -    "https://www.googleapis.com/auth/bce.secureconnect";
 +    "trk:074:https://www.googleapis.com/auth/bce.secureconnect";
+ 
+ // OAuth2 scope for access to personalized web search results.
+ const char kSearchResultsOAuth2Scope[] =
+-    "https://www.googleapis.com/auth/searchresults";
++    "trk:065:https://www.googleapis.com/auth/searchresults";
  
  // OAuth2 scope for access to Cast backdrop API.
  const char kCastBackdropOAuth2Scope[] =
@@ -566,6 +562,11 @@ by default.
 -const char kDriveOAuth2Scope[] = "https://www.googleapis.com/auth/drive";
 +const char kDriveOAuth2Scope[] = "trk:097:https://www.googleapis.com/auth/drive";
  
+ // OAuth2 scope for access to Drive Apps.
+ const char kDriveAppsOAuth2Scope[] =
+-    "https://www.googleapis.com/auth/drive.apps";
++    "trk:067:https://www.googleapis.com/auth/drive.apps";
+ 
  // OAuth2 scope for access for DriveFS to access flags.
  const char kExperimentsAndConfigsOAuth2Scope[] =
 -    "https://www.googleapis.com/auth/experimentsandconfigs";
@@ -590,6 +591,11 @@ by default.
  const char kNearbyDevicesOAuth2Scope[] =
 -    "https://www.googleapis.com/auth/nearbydevices-pa";
 +    "trk:100:https://www.googleapis.com/auth/nearbydevices-pa";
+ 
+ // OAuth2 scope for access to readonly Drive Apps.
+ const char kDriveAppsReadonlyOAuth2Scope[] =
+-    "https://www.googleapis.com/auth/drive.apps.readonly";
++    "trk:066:https://www.googleapis.com/auth/drive.apps.readonly";
  
  // OAuth2 scope for access to nearby sharing.
  const char kNearbyShareOAuth2Scope[] =
@@ -637,7 +643,7 @@ by default.
  const char kFeedOAuth2Scope[] = "https://www.googleapis.com/auth/googlenow";
 --- a/google_apis/gaia/gaia_urls.cc
 +++ b/google_apis/gaia/gaia_urls.cc
-@@ -24,6 +24,7 @@
+@@ -25,6 +25,7 @@
  namespace {
  
  // Gaia service constants

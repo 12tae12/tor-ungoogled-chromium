@@ -8,8 +8,8 @@
  
  #include "base/auto_reset.h"
 +#include "base/command_line.h"
- #include "base/notimplemented.h"
  #include "build/build_config.h"
+ #include "chrome/browser/extensions/browser_window_util.h"
  #include "chrome/browser/extensions/crx_installer.h"
 @@ -114,6 +115,14 @@ scoped_refptr<extensions::CrxInstaller>
    return installer;
@@ -50,11 +50,11 @@
  bool IsExtensionDownload(const download::DownloadItem& download_item);
 --- a/chrome/browser/download/download_target_determiner.cc
 +++ b/chrome/browser/download/download_target_determiner.cc
-@@ -1243,10 +1243,12 @@ DownloadConfirmationReason DownloadTarge
+@@ -1129,10 +1129,12 @@ DownloadConfirmationReason DownloadTarge
      return DownloadConfirmationReason::SAVE_AS;
  
- #if BUILDFLAG(ENABLE_EXTENSIONS)
--  // Don't prompt for extension downloads if the installation site is white
+ #if BUILDFLAG(ENABLE_EXTENSIONS_CORE)
+-  // Don't prompt for extension downloads if the installation site is allow
 -  // listed.
 -  if (download_crx_util::IsTrustedExtensionDownload(GetProfile(), *download_))
 -    return DownloadConfirmationReason::NONE;
@@ -69,7 +69,7 @@
    // Don't prompt for file types that are marked for opening automatically.
 --- a/chrome/browser/extensions/extension_management.cc
 +++ b/chrome/browser/extensions/extension_management.cc
-@@ -312,6 +312,13 @@ bool ExtensionManagement::IsInstallation
+@@ -335,6 +335,13 @@ bool ExtensionManagement::IsInstallation
  bool ExtensionManagement::IsOffstoreInstallAllowed(
      const GURL& url,
      const GURL& referrer_url) const {

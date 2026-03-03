@@ -1,7 +1,7 @@
 
 --- a/chrome/browser/background/extensions/background_mode_manager.cc
 +++ b/chrome/browser/background/extensions/background_mode_manager.cc
-@@ -350,7 +350,7 @@ BackgroundModeManager::~BackgroundModeMa
+@@ -347,7 +347,7 @@ BackgroundModeManager::~BackgroundModeMa
  
  // static
  void BackgroundModeManager::RegisterPrefs(PrefRegistrySimple* registry) {
@@ -12,7 +12,7 @@
  void BackgroundModeManager::RegisterProfile(Profile* profile) {
 --- a/chrome/browser/chrome_content_browser_client.cc
 +++ b/chrome/browser/chrome_content_browser_client.cc
-@@ -1462,7 +1462,7 @@ void ChromeContentBrowserClient::Registe
+@@ -1421,7 +1421,7 @@ void ChromeContentBrowserClient::Registe
  void ChromeContentBrowserClient::RegisterProfilePrefs(
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(prefs::kDisable3DAPIs, false);
@@ -23,7 +23,7 @@
    // used for mapping the command-line flags).
 --- a/chrome/browser/net/profile_network_context_service.cc
 +++ b/chrome/browser/net/profile_network_context_service.cc
-@@ -621,7 +621,7 @@ void ProfileNetworkContextService::Confi
+@@ -607,7 +607,7 @@ void ProfileNetworkContextService::Confi
  void ProfileNetworkContextService::RegisterProfilePrefs(
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(embedder_support::kAlternateErrorPagesEnabled,
@@ -45,7 +45,7 @@
  // Enum representing possible values of the Preload Pages opt-in state. These
 --- a/chrome/browser/profiles/profile.cc
 +++ b/chrome/browser/profiles/profile.cc
-@@ -325,7 +325,7 @@ const char Profile::kProfileKey[] = "__P
+@@ -328,7 +328,7 @@ const char Profile::kProfileKey[] = "__P
  void Profile::RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(
        prefs::kSearchSuggestEnabled,
@@ -67,15 +67,15 @@
      </cr-dialog>
 --- a/chrome/browser/ui/browser_ui_prefs.cc
 +++ b/chrome/browser/ui/browser_ui_prefs.cc
-@@ -121,7 +121,7 @@ void RegisterBrowserUserPrefs(user_prefs
+@@ -129,7 +129,7 @@ void RegisterBrowserUserPrefs(user_prefs
    registry->RegisterBooleanPref(prefs::kWebAppCreateInAppsMenu, true);
    registry->RegisterBooleanPref(prefs::kWebAppCreateInQuickLaunchBar, true);
    registry->RegisterBooleanPref(
 -      translate::prefs::kOfferTranslateEnabled, true,
 +      translate::prefs::kOfferTranslateEnabled, false,
        user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
-   registry->RegisterStringPref(prefs::kCloudPrintEmail, std::string());
-   registry->RegisterBooleanPref(prefs::kCloudPrintProxyEnabled, true);
+   registry->RegisterDictionaryPref(prefs::kBrowserWindowPlacement);
+   registry->RegisterDictionaryPref(prefs::kBrowserWindowPlacementPopup);
 --- a/components/autofill/core/common/autofill_prefs.cc
 +++ b/components/autofill/core/common/autofill_prefs.cc
 @@ -31,7 +31,7 @@ constexpr char kAutofillRanQuasiDuplicat
@@ -87,7 +87,7 @@
        user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
    registry->RegisterIntegerPref(
        kAutofillLastVersionDeduped, 0,
-@@ -40,7 +40,7 @@ void RegisterProfilePrefs(user_prefs::Pr
+@@ -59,7 +59,7 @@ void RegisterProfilePrefs(user_prefs::Pr
        kAutofillHasSeenIban, false,
        user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
    registry->RegisterBooleanPref(
@@ -109,7 +109,7 @@
    registry->RegisterBooleanPref(
 --- a/components/content_settings/core/browser/cookie_settings.cc
 +++ b/components/content_settings/core/browser/cookie_settings.cc
-@@ -94,7 +94,7 @@ void CookieSettings::RegisterProfilePref
+@@ -83,7 +83,7 @@ void CookieSettings::RegisterProfilePref
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterIntegerPref(
        prefs::kCookieControlsMode,
@@ -120,18 +120,13 @@
  
 --- a/components/password_manager/core/browser/password_manager.cc
 +++ b/components/password_manager/core/browser/password_manager.cc
-@@ -512,7 +512,7 @@ void HandleFailedLoginDetectionForPasswo
+@@ -548,10 +548,10 @@ PasswordForm CreateFormForLeakCheck(cons
  void PasswordManager::RegisterProfilePrefs(
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(
 -      prefs::kCredentialsEnableService, true,
 +      prefs::kCredentialsEnableService, false,
        user_prefs::PrefRegistrySyncable::SYNCABLE_PRIORITY_PREF);
- #if BUILDFLAG(IS_IOS)
-   // Deprecated pref in profile prefs.
-@@ -520,7 +520,7 @@ void PasswordManager::RegisterProfilePre
-                                 false);
- #endif  // BUILDFLAG(IS_IOS)
    registry->RegisterBooleanPref(
 -      prefs::kCredentialsEnableAutosignin, true,
 +      prefs::kCredentialsEnableAutosignin, false,

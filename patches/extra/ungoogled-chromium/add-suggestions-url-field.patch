@@ -334,7 +334,7 @@
    void ReloadIcon(size_t index);
 --- a/chrome/browser/ui/webui/settings/search_engines_handler.cc
 +++ b/chrome/browser/ui/webui/settings/search_engines_handler.cc
-@@ -49,6 +49,7 @@ namespace {
+@@ -51,6 +51,7 @@ namespace {
  const char kSearchEngineField[] = "searchEngine";
  const char kKeywordField[] = "keyword";
  const char kQueryUrlField[] = "queryUrl";
@@ -342,7 +342,7 @@
  
  // Dummy number used for indicating that a new search engine is added.
  const int kNewSearchEngineIndex = -1;
-@@ -255,6 +256,8 @@ base::Value::Dict SearchEnginesHandler::
+@@ -257,6 +258,8 @@ base::Value::Dict SearchEnginesHandler::
    Profile* profile = Profile::FromWebUI(web_ui());
    dict.Set("url",
             template_url->url_ref().DisplayURL(UIThreadSearchTermsData()));
@@ -351,7 +351,7 @@
    dict.Set("urlLocked", ((template_url->prepopulate_id() > 0) ||
                           (template_url->starter_pack_id() > 0)));
    GURL icon_url = template_url->favicon_url();
-@@ -418,12 +421,14 @@ void SearchEnginesHandler::HandleSearchE
+@@ -423,12 +426,14 @@ void SearchEnginesHandler::HandleSearchE
  void SearchEnginesHandler::OnEditedKeyword(TemplateURL* template_url,
                                             const std::u16string& title,
                                             const std::u16string& keyword,
@@ -369,7 +369,7 @@
    }
  
    edit_controller_.reset();
-@@ -453,6 +458,8 @@ bool SearchEnginesHandler::CheckFieldVal
+@@ -458,6 +463,8 @@ bool SearchEnginesHandler::CheckFieldVal
      is_valid = edit_controller_->IsKeywordValid(base::UTF8ToUTF16(field_value));
    } else if (field_name.compare(kQueryUrlField) == 0) {
      is_valid = edit_controller_->IsURLValid(field_value);
@@ -378,7 +378,7 @@
    } else {
      NOTREACHED();
    }
-@@ -475,18 +482,21 @@ void SearchEnginesHandler::HandleSearchE
+@@ -480,18 +487,21 @@ void SearchEnginesHandler::HandleSearchE
      return;
    }
  
@@ -428,7 +428,7 @@
  
 --- a/components/search_engines/template_url_service.cc
 +++ b/components/search_engines/template_url_service.cc
-@@ -1038,7 +1038,8 @@ void TemplateURLService::IncrementUsageC
+@@ -1036,7 +1036,8 @@ void TemplateURLService::IncrementUsageC
  void TemplateURLService::ResetTemplateURL(TemplateURL* url,
                                            const std::u16string& title,
                                            const std::u16string& keyword,
@@ -438,7 +438,7 @@
    DCHECK(!IsCreatedByExtension(*url));
    DCHECK(!keyword.empty());
    DCHECK(!search_url.empty());
-@@ -1062,6 +1063,7 @@ void TemplateURLService::ResetTemplateUR
+@@ -1060,6 +1061,7 @@ void TemplateURLService::ResetTemplateUR
    data.last_modified = clock_->Now();
    data.is_active = TemplateURLData::ActiveStatus::kTrue;
    data.policy_origin = TemplateURLData::PolicyOrigin::kNoPolicy;

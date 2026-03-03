@@ -2,7 +2,7 @@
 
 --- a/chrome/browser/ui/webui/suggest_internals/suggest_internals_handler.cc
 +++ b/chrome/browser/ui/webui/suggest_internals/suggest_internals_handler.cc
-@@ -66,9 +66,6 @@ void SuggestInternalsHandler::OnRequestC
+@@ -70,9 +70,6 @@ void SuggestInternalsHandler::OnRequestC
        suggest_internals::mojom::Request::New();
    mojom_request->id = request_id;
    mojom_request->url = request->url;
@@ -14,7 +14,7 @@
    page_->OnRequestCreated(std::move(mojom_request));
 --- a/chrome/common/google_url_loader_throttle.cc
 +++ b/chrome/common/google_url_loader_throttle.cc
-@@ -24,10 +24,6 @@
+@@ -25,10 +25,6 @@
  #include "services/network/public/mojom/x_frame_options.mojom.h"
  #include "url/origin.h"
  
@@ -25,7 +25,7 @@
  #if BUILDFLAG(ENABLE_BOUND_SESSION_CREDENTIALS)
  #include "chrome/common/bound_session_request_throttled_handler.h"
  #include "net/cookies/cookie_util.h"
-@@ -171,71 +167,6 @@ void GoogleURLLoaderThrottle::DetachFrom
+@@ -173,71 +169,6 @@ void GoogleURLLoaderThrottle::DetachFrom
  void GoogleURLLoaderThrottle::WillStartRequest(
      network::ResourceRequest* request,
      bool* defer) {
@@ -97,7 +97,7 @@
  }
  
  void GoogleURLLoaderThrottle::WillRedirectRequest(
-@@ -245,97 +176,12 @@ void GoogleURLLoaderThrottle::WillRedire
+@@ -247,97 +178,12 @@ void GoogleURLLoaderThrottle::WillRedire
      std::vector<std::string>* to_be_removed_headers,
      net::HttpRequestHeaders* modified_headers,
      net::HttpRequestHeaders* modified_cors_exempt_headers) {
@@ -268,14 +268,14 @@
 -      base::CommandLine::ForCurrentProcess()->HasSwitch(
 -          switches::kIgnoreGooglePortNumbers);
 -  return url.is_valid() && url.SchemeIsHTTPOrHTTPS() &&
--         (url.port().empty() || g_ignore_port_numbers ||
+-         (!url.has_port() || g_ignore_port_numbers ||
 -          (port_permission == ALLOW_NON_STANDARD_PORTS));
 -}
 -
 -bool IsCanonicalHostGoogleHostname(std::string_view canonical_host,
 -                                   SubdomainPermission subdomain_permission) {
 -  const GURL& base_url(CommandLineGoogleBaseURL());
--  if (base_url.is_valid() && (canonical_host == base_url.host_piece())) {
+-  if (base_url.is_valid() && (canonical_host == base_url.host())) {
 -    return true;
 -  }
 -
@@ -302,7 +302,7 @@
 -    return false;
 -  }
 -
--  std::string_view host(url.host_piece());
+-  std::string_view host(url.host());
 -  StripTrailingDot(&host);
 -
 -  static constexpr auto google_subdomains =
@@ -314,8 +314,8 @@
 -
  }  // namespace
  
- BASE_FEATURE(kIsViewerGoogleSearchUrl,
-@@ -155,13 +44,6 @@ BASE_FEATURE(kIsViewerGoogleSearchUrl,
+ BASE_FEATURE(kIsViewerGoogleSearchUrl, base::FEATURE_ENABLED_BY_DEFAULT);
+@@ -153,13 +42,6 @@ BASE_FEATURE(kIsViewerGoogleSearchUrl, b
  const char kGoogleHomepageURL[] = "trk:113:https://www.google.com/";
  
  bool HasGoogleSearchQueryParam(std::string_view str) {
@@ -329,7 +329,7 @@
    return false;
  }
  
-@@ -172,175 +54,53 @@ std::string GetGoogleLocale(const std::s
+@@ -170,175 +52,53 @@ std::string GetGoogleLocale(const std::s
  
  GURL AppendGoogleLocaleParam(const GURL& url,
                               const std::string& application_locale) {
@@ -339,7 +339,7 @@
  }
  
  std::string GetGoogleCountryCode(const GURL& google_homepage_url) {
--  std::string_view google_hostname = google_homepage_url.host_piece();
+-  std::string_view google_hostname = google_homepage_url.host();
 -  // TODO(igorcov): This needs a fix for case when the host has a trailing dot,
 -  // like "google.com./". https://crbug.com/720295.
 -  const size_t last_dot = google_hostname.find_last_of('.');
@@ -386,7 +386,7 @@
 -          switches::kGoogleBaseURL));
 -  if (current_switch_value != *switch_value) {
 -    *switch_value = current_switch_value;
--    *base_url = url_formatter::FixupURL(*switch_value, std::string());
+-    *base_url = url_formatter::FixupURL(*switch_value);
 -    if (!base_url->is_valid() || base_url->has_query() || base_url->has_ref()) {
 -      *base_url = GURL();
 -    }
@@ -407,7 +407,7 @@
                         SubdomainPermission subdomain_permission,
                         PortPermission port_permission) {
 -  return IsValidURL(url, port_permission) &&
--         IsCanonicalHostGoogleHostname(url.host_piece(), subdomain_permission);
+-         IsCanonicalHostGoogleHostname(url.host(), subdomain_permission);
 +  return false;
  }
  
@@ -428,7 +428,7 @@
 -  }
 -
 -  // Make sure the path is a known home page path.
--  std::string_view path(url.path_piece());
+-  std::string_view path(url.path());
 -  return IsPathHomePageBase(path) ||
 -         base::StartsWith(path, "/ig", base::CompareCase::INSENSITIVE_ASCII);
 +  return false;
@@ -443,7 +443,7 @@
 -  }
 -
 -  // Make sure the path is a known search path.
--  std::string_view path(url.path_piece());
+-  std::string_view path(url.path());
 -  bool is_home_page_base = IsPathHomePageBase(path);
 -  bool is_search_url =
 -      is_home_page_base || path == "/search" || path == "/imgres";
@@ -456,8 +456,8 @@
 -
 -  // Check for query parameter in URL parameter and hash fragment, depending on
 -  // the path type.
--  return HasGoogleSearchQueryParam(url.ref_piece()) ||
--         (!is_home_page_base && HasGoogleSearchQueryParam(url.query_piece()));
+-  return HasGoogleSearchQueryParam(url.ref()) ||
+-         (!is_home_page_base && HasGoogleSearchQueryParam(url.query()));
 +  return false;
  }
  
@@ -465,7 +465,7 @@
                          SubdomainPermission subdomain_permission,
                          PortPermission port_permission) {
 -  return IsValidURL(url, port_permission) &&
--         IsCanonicalHostYoutubeHostname(url.host_piece(), subdomain_permission);
+-         IsCanonicalHostYoutubeHostname(url.host(), subdomain_permission);
 +  return false;
  }
  
@@ -495,7 +495,7 @@
 -      ".youtubekids.com",
 -      ".ytimg.com",
 -  });
--  const std::string host = url.host();
+-  const std::string_view host(url.host());
 -  for (auto* i : kSuffixesToSetHeadersFor) {
 -    if (base::EndsWith(host, i, base::CompareCase::INSENSITIVE_ASCII)) {
 -      return true;
@@ -533,7 +533,7 @@
 -          // want to match URLs like www.google.appspot.com.
 -          net::registry_controlled_domains::EXCLUDE_PRIVATE_REGISTRIES);
 -
--  const std::string_view hostname = url.host_piece();
+-  const std::string_view hostname = url.host();
 -  if (registry_length == 0 || registry_length == std::string::npos ||
 -      registry_length >= hostname.length()) {
 -    return std::nullopt;
@@ -570,7 +570,7 @@
  bool IsProbablyGoogleSearchUrl(const GURL& url) {
 --- a/components/search_engines/template_url.cc
 +++ b/components/search_engines/template_url.cc
-@@ -609,10 +609,7 @@ std::u16string TemplateURLRef::SearchTer
+@@ -625,10 +625,7 @@ std::u16string TemplateURLRef::SearchTer
  bool TemplateURLRef::HasGoogleBaseURLs(
      const SearchTermsData& search_terms_data) const {
    ParseIfNecessary(search_terms_data);
@@ -689,18 +689,33 @@
  }  // namespace variations
 --- a/content/browser/preloading/prefetch/prefetch_container.cc
 +++ b/content/browser/preloading/prefetch/prefetch_container.cc
-@@ -777,7 +777,7 @@ void PrefetchContainer::AddRedirectHop(c
-   // some which are added by throttles). These aren't yet supported for
-   // prefetch, including browsing topics and client hints.
-   net::HttpRequestHeaders updated_headers;
--  std::vector<std::string> headers_to_remove = {variations::kClientDataHeader};
-+  std::vector<std::string> headers_to_remove;
-   updated_headers.SetHeader(blink::kSecPurposeHeaderName,
-                             GetSecPurposeHeaderValue(redirect_info.new_url));
+@@ -860,23 +860,6 @@ void PrefetchContainer::UpdateResourceRe
+   resource_request_->referrer = GURL(redirect_info.new_referrer);
+   resource_request_->referrer_policy = redirect_info.new_referrer_policy;
+ 
+-  // Remove `variations::kClientDataHeader` from `resource_request_->headers`,
+-  // to keep the existing behavior. While `AddXClientDataHeader()` adds
+-  // `variations::kClientDataHeader` to `resource_request->cors_exempt_headers`,
+-  // it's also possible that `variations::kClientDataHeader` is added to
+-  // `resource_request_->headers` via `request().additional_headers()`.
+-  //
+-  // TODO(crbug.com/467177773): The processing of
+-  // `variations::kClientDataHeader` is separated from other headers, to keep
+-  // the behavior of `variations::kClientDataHeader` during the main fixes for
+-  // crbug.com/467177773. The behavior of `variations::kClientDataHeader` should
+-  // be fixed together with other related bugs, by e.g. restructuring
+-  // `variations::AppendVariationsHeader()` and plumbing the
+-  // `variations::kClientDataHeader` removal and modification to
+-  // `FollowRedirect()`.
+-  // TODO(crbug.com/454082776): Remove `variations::kClientDataHeader` from
+-  // `resource_request->cors_exempt_headers`.
+-  resource_request_->headers.RemoveHeader(variations::kClientDataHeader);
+   AddXClientDataHeader(*resource_request_.get());
+ }
  
 --- a/net/base/url_util.cc
 +++ b/net/base/url_util.cc
-@@ -538,28 +538,6 @@ bool HasGoogleHost(const GURL& url) {
+@@ -549,28 +549,6 @@ bool HasGoogleHost(const GURL& url) {
  }
  
  bool IsGoogleHost(std::string_view host) {

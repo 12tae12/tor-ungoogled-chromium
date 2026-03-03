@@ -10,7 +10,7 @@
  #include "crypto/hash.h"
  #include "crypto/secure_hash.h"
  
-@@ -538,94 +537,10 @@ DownloadInterruptReason BaseFile::Publis
+@@ -537,94 +536,10 @@ DownloadInterruptReason BaseFile::Publis
  }
  #endif  // BUILDFLAG(IS_ANDROID)
  
@@ -105,7 +105,7 @@
  }
  
  void BaseFile::AnnotateWithSourceInformation(
-@@ -635,32 +550,8 @@ void BaseFile::AnnotateWithSourceInforma
+@@ -634,32 +549,8 @@ void BaseFile::AnnotateWithSourceInforma
      const std::optional<url::Origin>& request_initiator,
      mojo::PendingRemote<quarantine::mojom::Quarantine> remote_quarantine,
      OnAnnotationDoneCallback on_annotation_done_callback) {
@@ -142,14 +142,14 @@
  }  // namespace download
 --- a/content/browser/BUILD.gn
 +++ b/content/browser/BUILD.gn
-@@ -139,7 +139,6 @@ source_set("browser") {
-     "//components/performance_manager/scenario_api",
+@@ -137,7 +137,6 @@ source_set("browser") {
+     "//components/persistent_cache",
      "//components/power_monitor",
      "//components/services/filesystem:lib",
 -    "//components/services/quarantine",
      "//components/services/storage",
      "//components/services/storage:filesystem_proxy_factory",
-     "//components/services/storage/dom_storage:local_storage_proto",
+     "//components/services/storage/dom_storage/leveldb:local_storage_proto",
 --- a/content/browser/file_system_access/file_system_access_safe_move_helper.cc
 +++ b/content/browser/file_system_access/file_system_access_safe_move_helper.cc
 @@ -14,7 +14,6 @@

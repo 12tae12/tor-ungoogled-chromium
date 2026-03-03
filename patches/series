@@ -1,5 +1,3 @@
-upstream-fixes/glue_core_pools.patch
-upstream-fixes/hardware_destructive_interference_size.patch
 upstream-fixes/missing-dependencies.patch
 
 core/inox-patchset/0001-fix-building-without-safebrowsing.patch
@@ -34,6 +32,8 @@ core/ungoogled-chromium/disable-privacy-sandbox.patch
 core/ungoogled-chromium/doh-changes.patch
 core/ungoogled-chromium/extensions-manifestv2.patch
 core/ungoogled-chromium/remove-f1-shortcut.patch
+core/ungoogled-chromium/move-js-optimizer-unfamiliar-sites.patch
+core/ungoogled-chromium/build-with-wasm-rollup.patch
 core/bromite/disable-fetching-field-trials.patch
 
 extra/ungoogled-chromium/add-ungoogled-flag-headers.patch
@@ -101,7 +101,6 @@ extra/ungoogled-chromium/add-flags-for-existing-switches.patch
 extra/ungoogled-chromium/first-run-page.patch
 extra/ungoogled-chromium/add-flag-to-reduce-system-info.patch
 extra/ungoogled-chromium/add-flag-to-remove-client-hints.patch
-extra/ungoogled-chromium/disable-downloads-page-referrer-url.patch
 extra/ungoogled-chromium/enable-extra-locales.patch
 extra/ungoogled-chromium/disable-chromelabs.patch
 extra/ungoogled-chromium/remove-pac-size-limit.patch
@@ -110,3 +109,4 @@ extra/ungoogled-chromium/add-flag-to-spoof-webgl-renderer-info.patch
 extra/ungoogled-chromium/add-flag-to-increase-incognito-storage-quota.patch
 extra/ungoogled-chromium/add-credits.patch
 extra/ungoogled-chromium/disable-ai-search-shortcuts.patch
+extra/ungoogled-chromium/disable-fedcm-by-default.patch
